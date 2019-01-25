@@ -1,7 +1,9 @@
 package fr.insee.vtl;
 
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -11,6 +13,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.TokenStream;
@@ -51,9 +55,20 @@ public class Tree {
 			parserClass = loader.loadClass("fr.insee.vtl.VtlParser").asSubclass(Parser.class);
 			Constructor<? extends Parser> parserCtor = parserClass.getConstructor(TokenStream.class);
 			parser = parserCtor.newInstance((TokenStream)null);
+			parser.setBuildParseTree(true);
 		} catch (Exception e) {
 			tree = "Error on parser initialization: " + e.getMessage();
 		}
-        return tree;
+
+		try {
+			CharStream charStream = CharStreams.fromStream(new ByteArrayInputStream(expression.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+			lexer.setInputStream(charStream);
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
+			tokens.fill();
+		} catch (Exception e) {
+			tree = "Error on lexer execution: " + e.getMessage();
+		}
+
+		return tree;
     }
 }
