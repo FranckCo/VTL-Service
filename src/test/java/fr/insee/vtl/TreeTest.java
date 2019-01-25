@@ -44,7 +44,8 @@ public class TreeTest {
     public void testGetIt() {
 
     	String expression = "DS_r := DS_1[calc Me_2 := upper(Me_1)]";
+    	String expected = "(start (statement (varID DS_r) := (expr (exprAtom (ref (varID DS_1))) [ (datasetClause (calcClause calc (calcClauseItem (componentID Me_2) := (calcExpr (expr (exprAtom upper ( (expr (exprAtom (ref (varID Me_1)))) ))))))) ])) <EOF>)";
         String responseMsg = target.path("tree").queryParam("expression", expression).request().get(String.class);
-        assertEquals(expression, responseMsg);
+        assertEquals(responseMsg, expected);
     }
 }
