@@ -1,11 +1,17 @@
 package fr.insee.vtl;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Lexer;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -23,6 +29,21 @@ public class Tree {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt(@QueryParam("expression") String expression) {
-        return expression;
+
+    	String tree = expression;
+
+    	ClassLoader loader = Thread.currentThread().getContextClassLoader();
+    	// Create a lexer instance
+    	Lexer lexer = null;
+		try {
+
+	    	Class<? extends Lexer> lexerClass = loader.loadClass("fr.insee.vtl.VtlLexer").asSubclass(Lexer.class);
+			Constructor<? extends Lexer> lexerConstructor = lexerClass.getConstructor(CharStream.class);
+			lexer = lexerConstructor.newInstance((CharStream)null);
+		} catch (Exception e) {
+			tree = "Error on lexer initialization: " + e.getMessage();
+		}
+
+        return tree;
     }
 }
