@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.TokenStream;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -36,7 +38,6 @@ public class Tree {
     	// Create a lexer instance
     	Lexer lexer = null;
 		try {
-
 	    	Class<? extends Lexer> lexerClass = loader.loadClass("fr.insee.vtl.VtlLexer").asSubclass(Lexer.class);
 			Constructor<? extends Lexer> lexerConstructor = lexerClass.getConstructor(CharStream.class);
 			lexer = lexerConstructor.newInstance((CharStream)null);
@@ -44,6 +45,15 @@ public class Tree {
 			tree = "Error on lexer initialization: " + e.getMessage();
 		}
 
+		Class<? extends Parser> parserClass = null;
+		Parser parser = null;
+		try {
+			parserClass = loader.loadClass("fr.insee.vtl.VtlParser").asSubclass(Parser.class);
+			Constructor<? extends Parser> parserCtor = parserClass.getConstructor(TokenStream.class);
+			parser = parserCtor.newInstance((TokenStream)null);
+		} catch (Exception e) {
+			tree = "Error on parser initialization: " + e.getMessage();
+		}
         return tree;
     }
 }
