@@ -18,11 +18,12 @@ import fr.insee.vtl.VtlParser.StartContext;
 @Path("tree")
 public class Tree {
 
-    /**
-     * Method handling HTTP GET requests. The returned object will be sent to the client as "text/plain" media type.
-     *
-     * @return String that will be returned as a text/plain response.
-     */
+	/**
+	 * Method handling HTTP GET requests. The request should be made by the client as "text/plain" media type.
+	 * 
+	 * @param expression A VTL 2.0 expression.
+	 * @return The parse tree corresponding to the expression, returned as a text/plain response.
+	 */
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
@@ -32,7 +33,7 @@ public class Tree {
     	VtlLexer lexer = new VtlLexer(CharStreams.fromString(expression));
     	// Create a VTL parser instance
 		VtlParser parser = new VtlParser(new CommonTokenStream(lexer));
-		// Create a context for rule "start" (root rule for VTL
+		// Create a context for rule "start" (root rule for VTL)
 		StartContext context = parser.start();
 
 		// Return the parse tree as a string
