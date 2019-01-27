@@ -1,11 +1,5 @@
 package fr.insee.vtl;
 
-import java.io.ByteArrayInputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,13 +7,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.TokenStream;
+
+import fr.insee.vtl.VtlParser.StartContext;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -38,48 +29,14 @@ public class Tree {
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt(@QueryParam("expression") String expression) {
 
-    	String result = null;
+    	// Create a VTL lexer instance
+    	VtlLexer lexer = new VtlLexer(CharStreams.fromString(expression));
+    	// Create a VTL parser instance
+		VtlParser parser = new VtlParser(new CommonTokenStream(lexer));
+		// Create a context for rule "start" (root rule for VTL
+		StartContext context = parser.start();
 
-    	ClassLoader loader = Thread.currentThread().getContextClassLoader();
-    	// Create a lexer instance
-    	Lexer lexer = null;
-		try {
-	    	Class<? extends Lexer> lexerClass = loader.loadClass("fr.insee.vtl.VtlLexer").asSubclass(Lexer.class);
-			Constructor<? extends Lexer> lexerConstructor = lexerClass.getConstructor(CharStream.class);
-			lexer = lexerConstructor.newInstance((CharStream)null);
-		} catch (Exception e) {
-			result = "Error on lexer initialization: " + e.getMessage();
-		}
-
-		Class<? extends Parser> parserClass = null;
-		Parser parser = null;
-		try {
-			parserClass = loader.loadClass("fr.insee.vtl.VtlParser").asSubclass(Parser.class);
-			Constructor<? extends Parser> parserCtor = parserClass.getConstructor(TokenStream.class);
-			parser = parserCtor.newInstance((TokenStream)null);
-			parser.setBuildParseTree(true);
-		} catch (Exception e) {
-			result = "Error on parser initialization: " + e.getMessage();
-		}
-
-		try {
-			CharStream charStream = CharStreams.fromStream(new ByteArrayInputStream(expression.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
-			lexer.setInputStream(charStream);
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			tokens.fill();
-			parser.setTokenStream(tokens);
-		} catch (Exception e) {
-			result = "Error on lexer execution: " + e.getMessage();
-		}
-
-		try {
-			Method startRule = parserClass.getMethod("start"); // 'start' is the name of the top VTL rule
-			ParserRuleContext tree = (ParserRuleContext)startRule.invoke(parser, (Object[])null);
-			result = tree.toStringTree(parser);
-		} catch (Exception e) {
-			result = "Error on parser execution: " + e.getMessage();
-		}
-
-		return result;
+		// Return the parse tree as a string
+		return context.toStringTree(parser);
     }
 }
