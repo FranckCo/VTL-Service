@@ -18,18 +18,12 @@ public class TreeTest {
 
     @Before
     public void setUp() throws Exception {
-        // start the server
+
+        // Start the server
         server = Main.startServer();
-        // create the client
-        Client c = ClientBuilder.newClient();
-
-        // uncomment the following line if you want to enable
-        // support for JSON in the client (you also have to uncomment
-        // dependency on jersey-media-json module in pom.xml and Main.startServer())
-        // --
-        // c.configuration().enable(new org.glassfish.jersey.media.json.JsonJaxbFeature());
-
-        target = c.target(Main.BASE_URI);
+        // Create the client and web target
+        Client client = ClientBuilder.newClient();
+        target = client.target(Main.BASE_URI);
     }
 
     @After
@@ -38,7 +32,7 @@ public class TreeTest {
     }
 
     /**
-     * Test to see that the message "Got it!" is sent in the response.
+     * Test to see that the tree corresponding to the test expression is sent in the response.
      */
     @Test
     public void testGetIt() {
@@ -46,6 +40,6 @@ public class TreeTest {
     	String expression = "DS_r := DS_1[calc Me_2 := upper(Me_1)]";
     	String expected = "(start (statement (varID DS_r) := (expr (exprAtom (ref (varID DS_1))) [ (datasetClause (calcClause calc (calcClauseItem (componentID Me_2) := (calcExpr (expr (exprAtom upper ( (expr (exprAtom (ref (varID Me_1)))) ))))))) ])) <EOF>)";
         String responseMsg = target.path("tree").queryParam("expression", expression).request().get(String.class);
-        assertEquals(responseMsg, expected);
+        assertEquals(expected, responseMsg);
     }
 }

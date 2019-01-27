@@ -13,14 +13,13 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import fr.insee.vtl.VtlParser.StartContext;
 
 /**
- * Root resource (exposed at "myresource" path)
+ * Root resource (exposed at "vtl-parser" path)
  */
 @Path("tree")
 public class Tree {
 
     /**
-     * Method handling HTTP GET requests. The returned object will be sent
-     * to the client as "text/plain" media type.
+     * Method handling HTTP GET requests. The returned object will be sent to the client as "text/plain" media type.
      *
      * @return String that will be returned as a text/plain response.
      */
