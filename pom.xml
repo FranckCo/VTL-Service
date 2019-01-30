@@ -5,8 +5,8 @@
 
     <groupId>fr.insee.vtl</groupId>
     <artifactId>vtl-service</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <version>1.0</version>
     <name>vtl-service</name>
 
 	<properties>
@@ -37,7 +37,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-grizzly2-http</artifactId>
+            <artifactId>jersey-container-servlet</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
@@ -63,11 +63,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.8.0</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -83,18 +83,12 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.2</version>
                 <configuration>
-                    <mainClass>fr.insee.vtl.Main</mainClass>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warName>vtl-service</warName>
                 </configuration>
             </plugin>
         </plugins>
