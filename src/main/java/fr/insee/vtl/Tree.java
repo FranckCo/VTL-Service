@@ -1,5 +1,7 @@
 package fr.insee.vtl;
 
+import java.io.IOException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,11 +25,12 @@ public class Tree {
 	 * 
 	 * @param expression A VTL 2.0 expression.
 	 * @return The parse tree corresponding to the expression, returned as a text/plain response.
+	 * @throws Exception 
 	 */
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.TEXT_PLAIN)
-    public String getIt(@QueryParam("expression") String expression) {
+    public String getIt(@QueryParam("expression") String expression)  throws Exception {
 
     	// Create a VTL lexer instance
     	VtlLexer lexer = new VtlLexer(CharStreams.fromString(expression));
