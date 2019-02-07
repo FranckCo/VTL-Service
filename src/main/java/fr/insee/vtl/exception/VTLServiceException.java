@@ -4,6 +4,7 @@ import java.io.IOException;
 
 public class VTLServiceException extends IOException {
 
+	private static final long serialVersionUID = 1832020793791149184L;
 	private int status;
 	private int state;
 	private String details;
