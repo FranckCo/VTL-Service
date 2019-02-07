@@ -81,6 +81,15 @@
 						<goals>
 							<goal>antlr4</goal>
 						</goals>
+						<!-- Uncomment the following lines to generate the JavaScript parser -->
+						<!-- See https://github.com/antlr/antlr4/issues/2323 -->
+						<!-- 
+						<configuration>
+							<arguments>
+								<argument>-Dlanguage=JavaScript</argument>
+							</arguments>
+						</configuration>
+						-->
 					</execution>
 				</executions>
 			</plugin>
