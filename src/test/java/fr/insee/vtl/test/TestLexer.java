@@ -6,25 +6,20 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
 import org.junit.Test;
 
 import fr.insee.vtl.VtlLexer;
 
 public class TestLexer {
 
-	static final String VTL_EXPRESSION = "DS_r := DS_1 [ calc Me_2 := upper ( Me_1 ) ]";
 	protected static Logger logger = LogManager.getLogger();
 	VtlLexer lexer = null;
 
-	@Before
-	public void setUp() throws Exception {
-
-		lexer = new VtlLexer(CharStreams.fromString(VTL_EXPRESSION));
-	}
-
 	@Test
 	public void testTokens() {
+
+		final String vtlExpression = "DS_r := DS_1 [ calc Me_2 := upper ( Me_1 ) ]";
+		lexer = new VtlLexer(CharStreams.fromString(vtlExpression));
 
 		List<? extends Token> tokens = lexer.getAllTokens();
 
