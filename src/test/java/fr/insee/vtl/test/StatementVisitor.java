@@ -1,5 +1,6 @@
 package fr.insee.vtl.test;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,5 +26,13 @@ public class StatementVisitor extends VtlBaseVisitor<Integer> {
     	logger.info("Visiting 'datasetClause' rule, text is " + context.getText());
 
     	return context.getChildCount();
+    }
+
+    @Override
+    public Integer visitTerminal(TerminalNode node) {
+
+    	logger.info("Visiting terminal node, text is " + node.getText());
+
+    	return node.getChildCount();
     }
 }
